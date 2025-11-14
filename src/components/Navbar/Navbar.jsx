@@ -55,7 +55,6 @@ export default function Navbar({ title, email }) {
         padding: "0 24px",
       }}
     >
-      {/* Avatar + Dropdown */}
       <Dropdown overlay={userMenu} trigger={["click"]} placement="bottomLeft">
         <div
           style={{
