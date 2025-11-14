@@ -1,17 +1,19 @@
 import {
   DashboardOutlined,
   LogoutOutlined,
+  MenuOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { Menu, Avatar, Dropdown } from "antd";
 import { Header } from "antd/es/layout/layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar({ title, email }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [current, setCurrent] = useState(location.pathname);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const handleClick = (e) => {
     if (e.key === "/logout") {
@@ -23,7 +25,30 @@ export default function Navbar({ title, email }) {
       navigate(e.key);
     }
   };
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
+  const navMenu = (
+    <Menu
+      onClick={handleClick}
+      selectedKeys={[current]}
+      items={[
+        {
+          key: "/dashboard",
+          icon: <DashboardOutlined />,
+          label: "Dashboard",
+        },
+        {
+          key: "/logout",
+          icon: <LogoutOutlined style={{ color: "#dc2626" }} />,
+          label: <span style={{ color: "#dc2626" }}>Logout</span>,
+        },
+      ]}
+    />
+  );
   const userMenu = (
     <Menu
       items={[
@@ -79,47 +104,46 @@ export default function Navbar({ title, email }) {
         </div>
       </Dropdown>
 
-      {/* Right Menu */}
-      <Menu
-        onClick={handleClick}
-        selectedKeys={[current]}
-        mode="horizontal"
-        theme="light"
-        style={{
-          marginLeft: "auto",
-          borderBottom: "none",
-          display: "flex",
-          alignItems: "center",
-          gap: 20,
-        }}
-        items={[
-          {
-            key: "/dashboard",
-            icon: <DashboardOutlined style={{ fontSize: 18 }} />,
-            label: <span className="nav-item">Dashboard</span>,
-          },
-          {
-            key: "/logout",
-            label: (
-              <span
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 8,
-                  borderRadius: 20,
-                  color: "#dc2626",
-                  fontWeight: 600,
-                  transition: "all 0.3s",
-                }}
-                className="logout-btn"
-              >
-                <LogoutOutlined />
-                Logout
-              </span>
-            ),
-          },
-        ]}
-      />
+      {!isMobile && (
+        <Menu
+          onClick={handleClick}
+          selectedKeys={[current]}
+          mode="horizontal"
+          theme="light"
+          style={{
+            marginLeft: "auto",
+            borderBottom: "none",
+            display: "flex",
+            alignItems: "center",
+            gap: 20,
+          }}
+          items={[
+            {
+              key: "/dashboard",
+              icon: <DashboardOutlined />,
+              label: "Dashboard",
+            },
+            {
+              key: "/logout",
+              icon: <LogoutOutlined style={{ color: "#dc2626" }} />,
+              label: <span style={{ color: "#dc2626" }}>Logout</span>,
+            },
+          ]}
+        />
+      )}
+
+      {isMobile && (
+        <Dropdown overlay={navMenu} placement="bottomRight" trigger={["click"]}>
+          <MenuOutlined
+            style={{
+              fontSize: 26,
+              marginLeft: "auto",
+              cursor: "pointer",
+              padding: 10,
+            }}
+          />
+        </Dropdown>
+      )}
     </Header>
   );
 }
