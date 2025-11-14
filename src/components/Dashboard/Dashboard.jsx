@@ -42,7 +42,7 @@ export default function Dashboard() {
     <>
       <DashboardHelmet />
       <div className="dashboard">
-        <Navbar title={userData?.user?.name || "Dashboard"} />
+        <Navbar title={userData?.user} email={userData?.email} />
 
         <div>
           {(productsLoading || brandsLoading || categoriesLoading) && (

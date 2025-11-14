@@ -43,7 +43,11 @@ export default function Login() {
           autoClose: 800,
         });
         dispatch(
-          setLoginData({ user: data?.user?.name, role: data?.user?.role })
+          setLoginData({
+            user: data?.user?.name,
+            email: data?.user?.email,
+            role: data?.user?.role,
+          })
         );
         setSubmitAttempt(false);
         localStorage.setItem("token", data?.token);
